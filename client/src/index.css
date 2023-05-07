@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*This is for  font type*/
+* > *{
+  font-family: 'Source Code Pro', monospace;
+}
