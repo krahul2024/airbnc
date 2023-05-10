@@ -1,8 +1,10 @@
-import React, { useContext , useState } from 'react'
+import React, { useContext , useState , useEffect } from 'react'
 import {NavLink , useLocation , useNavigate , useParams} from 'react-router-dom'
 import Perks from './perks.jsx'
 import axios from 'axios'
-
+import { UserContext } from '../UserContext.jsx'
+import SinglePlace from './places.jsx'
+import PlaceInfo from './placeInfo.jsx'
 const Place = () => {
 	const navigate = useNavigate() 
 	const {action } = useParams() 
@@ -18,6 +20,8 @@ const Place = () => {
 	const [maxGuests , setMaxGuests] = useState(1)
 	const [redirect , setRedirect] = useState(null)
 	const [refresh , setRefresh] = useState(false) 
+	const {profile } = useContext(UserContext)
+	const [places , setPlaces] = useState([])
 	// const [uploadedPhotos , setUploadedPhotos] = useState([]
 
 	function inputTitleAndDescription(title , description) {
@@ -78,11 +82,11 @@ const Place = () => {
 			extraInfo , checkIn , checkOut , maxGuests 
 		}
 
-		console.log({placeData})
+		// console.log({placeData})
 
 		const response = await axios.post('/place/new' , {data:placeData} , {withCredentials:true}) 
 		const {data } = response  
-		console.log(data) 
+		// console.log(data) 
 		if(data.success) {
 			setRefresh(true) 
 			navigate('/user/accomodations')
@@ -92,13 +96,29 @@ const Place = () => {
 		 setRefresh(false) 
 		 window.location.reload()
 		}
+
+	// getting list of all the places so that we can display
+		const getPlaces = async() => {
+			// console.log({profile})
+			const response = await axios.post('/place/place_list' , { user:profile} , { withCredentials:true})
+			const result = response.data   
+			// console.log(result) 
+
+			setPlaces(result.places) 
+		}
+		useEffect(() => {
+			getPlaces()  
+		},[])
+
+		// console.log({places})
+		console.log({action})
 	
 
 	return (<> 
 
 		<div className="">
 			{
-				action!== 'new' && (
+				action!== 'new' && action === undefined &&  (
 
 			<div className="text-center">
 				<NavLink  className="inline-flex gap-2 bg-cyan-800 rounded-full py-2 px-6 text-white text-sm"
@@ -170,7 +190,7 @@ const Place = () => {
 								 className="w-2/3 text-cyan-700 py-2 px-4 m-3 outline-0 rounded-xl py-1 px-4 shadow-2xl border-2 shadow-gray-200 backdrop-brightness-150"
 								/>
 							</div>
-                             {/* list of all the perks to be checked */}
+                             {/* list of all the perks dsato be checked */}
 							<Perks selectedPerks={perks} onChange={setPerks} />
 
 							<div className="p-2">
@@ -216,6 +236,31 @@ const Place = () => {
 						</form>
 					</div>
 			)}
+
+			{/*displaying list of all the places which user has added */}
+			<div className="mt-4 flex flex-col">
+				{ places.length >0 && places.map((place) => (
+					<div>
+						{ action !== 'new' && action === undefined && (
+							<div>
+								<span className="p-2 font-semibold text-sky-800 text-lg">Your Places</span>
+								<SinglePlace place = {place}  /> 
+							</div>
+						)}
+						{
+							action && action !== 'new' && (
+								<div>
+									<PlaceInfo action = {action}  />
+								</div>
+								)
+						}
+					</div>	
+					
+
+				))}
+
+
+			</div>
 
 
 		</div>

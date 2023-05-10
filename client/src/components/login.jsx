@@ -31,7 +31,7 @@ const Login = () => {
 			window.alert(response.data.msg)
 			if(response.data.success) {
 				setProfile(response.data.user) //setting user-information which we got after logging in of the user
-				navigate("/")
+				navigate("/user/profile")
 			 }
 
 		}

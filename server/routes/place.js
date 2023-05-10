@@ -110,4 +110,58 @@ router.post('/new' , auth , async(req,res) => {
 
 })
 
+router.post('/place_list' , auth ,  async(req,res) => {
+	// console.log(req.body)  
+	const { user } = req.body  
+	try{
+			const places = await Place.find({owner : user._id})
+			console.log({places})
+
+			if(!places) return res.status(500).send({
+				msg:'There was an error! Please try again.',
+				success:true 
+			})
+
+			return res.status(200).send({
+				success:true ,
+				msg:'successfully fetched list of all the places owned by this user.' ,
+				places 
+			})
+	}
+	catch(error) {
+		console.log(error.message) 
+		return res.status(500).send({
+			msg:'There was an error! Please try again.',
+			success:true 
+		})
+	}
+})
+
+router.get('/places/:id' , async(req,res) => {
+	// console.log(req.params) 
+	const {id} = req.params  
+	try{
+		const place = await Place.findOne({_id:id})  
+		if(!place) return res.status(500).send({
+				msg:'There was an error! Please try again.',
+				success:true 
+			})
+
+		return res.status(200).send({
+			success:true , 
+			msg:"Successfully fetched the place information.",
+			place  
+		})
+	}
+	catch(error) {
+		console.log(error.message) 
+		return res.status(500).send({
+			msg:'There was an error! Please try again.',
+			success:true 
+		})
+	}
+
+	
+})
+
 export default router 

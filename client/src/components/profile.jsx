@@ -16,6 +16,7 @@ const Profile = () => {
 	//information and due to this when refreshed our page will display error so we are using ready with 
 	//2 if conditions such that if one is executed and displays loading , event then next one will be displayed 
 	if(!ready) {
+		setTimeout(() => {setReady(true)} ,1000)
 		return <div className="text-cyan-800 text-lg font-semibold">Loading....</div>
 	}
 
@@ -36,8 +37,7 @@ const Profile = () => {
 		const response = await axios.post('/user/logout' ,{username:profile.username},{withCredentials:true})  
 		console.log(response.data) 
 		setProfile(null)
-		location.window.reload() 
-		navigate("/login")
+		navigate("/")
 	}
 
 	const update = (e) => {
