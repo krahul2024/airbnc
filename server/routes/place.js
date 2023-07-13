@@ -164,4 +164,23 @@ router.get('/places/:id' , async(req,res) => {
 	
 })
 
+router.post('/places' , async(req,res) => {
+
+	const {criteria } = req.body 
+	//currently we don't have any criteria so we are just returning list of all the places
+	const places = await Place.find({})  
+	if(!places) return res.status(500).send({
+		msg:'There was an error! Please try again later.',
+		success:false
+	}) 
+
+	console.log(places.length , 'is total number of places.')
+
+	return res.status(200).send({
+		success:true ,
+		msg:'fetched list of places successfully',
+		places 
+	})
+})
+
 export default router 

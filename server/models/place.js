@@ -14,7 +14,8 @@ const placeSchema = new mongoose.Schema({
 	extraInfo:String,
 	checkIn:String, 
 	checkOut:String,
-	maxGuests:Number 
+	maxGuests:Number,
+	mainPhoto:String
 })
 
 export default mongoose.model('Place' , placeSchema) 

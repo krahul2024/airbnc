@@ -19,9 +19,9 @@ const SinglePlace = ({place}) => {
 
 		<NavLink to={'/user/accomodations/' + place._id} target = "_blank" className='flex bg-gray-100 p-3 gap-6 rounded-2xl cursor-pointer'>
 		{/*This div is for displaying first image of the place*/}
-			<div className="h-32 w-32 bg-gray-200 rounded-2xl gap-2 grow shrink-0">
+			<div className="flex justify-center h-32 w-32 bg-gray-200 rounded-2xl gap-2 grow shrink-0">
 				{photos.length>0 && (
-					<img src={photos[0]} alt="" className='rounded-lg'/>
+					<img src={photos[0]} alt="" className='flex justify-center rounded-lg'/>
 					)}
 			</div>
 			<div className="grow-0 shrink">

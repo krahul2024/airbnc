@@ -21,7 +21,9 @@ const Place = () => {
 	const [redirect , setRedirect] = useState(null)
 	const [refresh , setRefresh] = useState(false) 
 	const {profile } = useContext(UserContext)
+	const [isShown , setIsShown] = useState(false)
 	const [places , setPlaces] = useState([])
+	const [mainPhoto , setMainPhoto] = useState('') 
 	// const [uploadedPhotos , setUploadedPhotos] = useState([]
 
 	function inputTitleAndDescription(title , description) {
@@ -79,7 +81,7 @@ const Place = () => {
 		e.preventDefault() 
 		const placeData = {
 			title ,address , addedPhotos , description , perks , 
-			extraInfo , checkIn , checkOut , maxGuests 
+			extraInfo , checkIn , checkOut , maxGuests , mainPhoto 
 		}
 
 		// console.log({placeData})
@@ -112,7 +114,23 @@ const Place = () => {
 
 		// console.log({places})
 		console.log({action})
-	
+
+		// this is for deletion of a photo when user clicks to remove it also we need to remove that photo from backend
+		const deleteSelectedPhoto = (e , index) => {
+			e.preventDefault() 
+			console.log(addedPhotos[index])
+			console.log(addedPhotos.length) 
+			//deleting the selected photo from uploaded photos
+			const photosList = addedPhotos.filter((item) => { return item !== addedPhotos[index]})
+			setAddedPhotos(photosList) 
+		}
+		
+		// this is for setting an image as main image 
+		const setMain = (e , index) => {
+			e.preventDefault() 
+			setMainPhoto(addedPhotos[index])
+			console.log({mainPhoto})
+		}
 
 	return (<> 
 
@@ -166,9 +184,28 @@ const Place = () => {
 
 								<div className="mt-2 grid gap-1 p-4 grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 items-center">
 										{addedPhotos.length > 0 && addedPhotos.map((photo , index) => (
-											<div className="" key = {index} >
+											<div className="flex relative" key = {index} >
 												<img className="brightness-125 backdrop-brightness-150 cursor-pointer rounded-xl flex h-40 w-full object-center"
 											 		src = { `http://localhost:5174/uploads/${photo}`} />
+												<button onClick = { (e) => deleteSelectedPhoto(e , index) }
+													className="cursor-pointer absolute bottom-1 right-1 text-sky-800 rounded-lg hover:bg-sky-800 hover:text-gray-400 border-sky-800 border-2">
+													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+													  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+													</svg>
+												</button>		
+												<button onClick = { (e) => setMain(e , index) }
+													className="cursor-pointer absolute bottom-1 left-1 text-white border-gray-100 ">
+													{mainPhoto !== photo && (
+														<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+														  <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+														</svg>
+														) }
+													{ mainPhoto === photo && (
+														<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" strokeWidth={4.7}  className="w-6 h-6 text-sky-500">
+														  <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+														</svg>
+														)}
+												</button>	
 											</div>
 										
 										))}
